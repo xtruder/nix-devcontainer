@@ -1,0 +1,21 @@
+version: '3'
+services:
+  dev:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        USER_UID: ${USER_UID:-1000}
+        USER_GID: ${USER_GID:-1000}
+    environment:
+      PATH: /home/user/.nix-profile/bin:/home/user/.local/bin:/usr/local/bin:/usr/bin:/bin
+    command: sleep infinity
+    volumes:
+      - ..:/workspace:cached
+      - nix:/nix
+      - direnv-allow:/home/user/.config/direnv/allow
+    network_mode: bridge
+
+volumes:
+  nix:
+  direnv-allow:
