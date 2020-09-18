@@ -10,6 +10,7 @@ RUN apt -y install --no-install-recommends \
     xz-utils \
     sudo \
     git \
+    ssh \
     gnupg2 \
     nano \
     vim-tiny \
