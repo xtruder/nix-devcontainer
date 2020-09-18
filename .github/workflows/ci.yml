@@ -80,5 +80,5 @@ jobs:
         if: github.ref == "refs/heads/${{ github.event.repository.default_branch }}"
         env:
           DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
-          DOCKERHUB_PASSWORD: ${{ secrets.DOCKERHUB_TOKEN }}
+          DOCKERHUB_PASSWORD: ${{ secrets.DOCKERHUB_PASSWORD }}
           DOCKERHUB_REPOSITORY: xtruder/debian-nix-devcontainer
