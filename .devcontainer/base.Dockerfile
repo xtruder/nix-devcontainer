@@ -40,9 +40,12 @@ RUN groupadd --gid ${USER_GID} ${USERNAME} && \
     chmod 0440 /etc/sudoers.d/${USERNAME}
 
 # install nix
-ARG NIX_VERSION=2.3.7
-RUN curl -L https://releases.nixos.org/nix/nix-${NIX_VERSION}/install | sudo -u user sh && \
-    mkdir -p /etc/nix && echo "sandbox = relaxed" > /etc/nix/nix.conf
+ARG NIX_INSTALL_SCRIPT=https://nixos.org/nix/install
+RUN curl -L ${NIX_INSTALL_SCRIPT} | sudo -u user sh
+
+# configure nix
+ARG EXTRA_NIX_CONFIG=""
+RUN mkdir -p /etc/nix && echo "sandbox = relaxed\n$EXTRA_NIX_CONFIG" > /etc/nix/nix.conf
 
 # onbuild uid and gid fixes
 ONBUILD ARG USERNAME=user
