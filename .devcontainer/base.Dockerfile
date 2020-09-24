@@ -53,7 +53,7 @@ ONBUILD ARG USER_UID=1000
 ONBUILD ARG USER_GID=${USER_UID}
 ONBUILD RUN \
     set -x && \
-    if [ -z ${USER_UID} || -z ${USER_UID} || -z ${USERNAME} ]; then exit 0; fi \
+    if [[ -z ${USER_UID} || -z ${USER_UID} || -z ${USERNAME} ]]; then exit 0; fi && \
     if [ "$(id -g ${USERNAME})" != "${USER_UID}" ] || [ "$(id -g ${USERNAME})" != "${USER_GID}" ]; then \
         groupmod -g ${USER_GID} user || true && \
         usermod -u ${USER_UID} -g ${USER_GID} ${USERNAME} && \
