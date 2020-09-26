@@ -1,7 +1,11 @@
 // For format details, see https://aka.ms/vscode-remote/devcontainer.json or the definition README at
 // https://github.com/microsoft/vscode-dev-containers/tree/master/containers/docker-existing-dockerfile
 {
-  "name": "debian-nix-devcontainer",
+  "name": "{{cookiecutter.project_slug}}",
+  {% if cookiecutter.compose == "y" -%}
+  "dockerComposeFile": "docker-compose.yml",
+  "service": "dev",
+  {%- else -%}
   "dockerFile": "Dockerfile",
   "build": {
     "args": {
@@ -9,17 +13,15 @@
       "USER_GID": "${localEnv:USER_GID}"
     }
   },
-  "mounts": [
-    "source=/var/run/docker.sock,target=/var/run/docker.sock,type=bind"
-  ],
   "runArgs": [
-    "-v", "debian-nix-devcontainer_devcontainer_nix:/nix",
-    "-v", "debian-nix-devcontainer_devcontainer_direnv-allow:/home/user/.config/direnv/allow",
+    "-v", "project-templates_devcontainer_nix:/nix",
+    "-v", "project-templates_devcontainer_direnv-allow:/home/user/.config/direnv/allow",
     "--security-opt", "label=disable"
   ],
   "containerEnv": {
     "PATH": "/home/user/.nix-profile/bin:/home/user/.local/bin:/usr/local/bin:/usr/bin:/bin"
   },
+  {%- endif %}
   
   // Set *default* container specific settings.json values on container create.
   "settings": { 
@@ -34,8 +36,7 @@
   // Add the IDs of extensions you want installed when the container is created.
   "extensions": [
     "arrterian.nix-env-selector",
-    "bbenoist.nix",
-    "ms-azuretools.vscode-docker"
+    "bbenoist.nix"
   ],
 
   // Use 'forwardPorts' to make a list of ports inside the container available locally.

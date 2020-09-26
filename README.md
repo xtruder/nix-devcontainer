@@ -55,7 +55,7 @@ managed by [nix-shell](https://nixos.org/manual/nix/stable/#sec-nix-shell).
 
 ## Using this definition with an existing folder
 
-**[Optional] Include any special setup requirements here. For example:**
+**Include any special setup requirements here. For example:**
 
 This devcontainer should work out of the box. If you have different `uid`
 or `gid` of your user on system, you will have to set `USER_UID` and

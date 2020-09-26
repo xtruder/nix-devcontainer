@@ -71,8 +71,8 @@ jobs:
         name: Build and push docker image
         uses: docker/build-push-action@v2
         with:
-          context: ./.devcontainer
-          file: ./.devcontainer/base.Dockerfile
+          context: "."
+          file: ./Dockerfile
           push: ${{ github.event_name != 'pull_request' }}
           tags: ${{ steps.prep.outputs.tags }}
           labels: |
@@ -89,8 +89,8 @@ jobs:
         name: Build and push docker image with flakes support
         uses: docker/build-push-action@v2
         with:
-          context: ./.devcontainer
-          file: ./.devcontainer/base.Dockerfile
+          context: "."
+          file: ./Dockerfile
           push: ${{ github.event_name != 'pull_request' }}
           tags: ${{ steps.prep.outputs.flake_tags }}
           build-args: |

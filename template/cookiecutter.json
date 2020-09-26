@@ -1,0 +1,9 @@
+{
+    "project_slug": "project",
+    "image": "",
+    "workspace": "n",
+    "flakes": "y",
+    "compose": "y",
+    "niv": "n",
+    "nixpkgs_branch": "nixos-20.09"
+}

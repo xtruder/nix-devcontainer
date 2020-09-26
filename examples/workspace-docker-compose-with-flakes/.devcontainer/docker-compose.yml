@@ -7,8 +7,6 @@ services:
       args:
         USER_UID: ${USER_UID:-1000}
         USER_GID: ${USER_GID:-1000}
-    security_opt:
-      - label:disable
     environment:
       PATH: /home/user/.nix-profile/bin:/home/user/.local/bin:/usr/local/bin:/usr/bin:/bin
     command: sleep infinity
@@ -16,6 +14,8 @@ services:
       - ..:/workspace:cached
       - nix:/nix
       - direnv-allow:/home/user/.config/direnv/allow
+    security_opt:
+      - label:disable
     network_mode: bridge
 
 volumes:
