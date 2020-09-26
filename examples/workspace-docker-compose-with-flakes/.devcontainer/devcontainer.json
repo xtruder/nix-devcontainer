@@ -4,6 +4,7 @@
   "name": "workspace-docker-compose-with-flakes",
   "dockerComposeFile": "docker-compose.yml",
   "service": "dev",
+  "workspaceFolder": "/workspace"
   
   // Set *default* container specific settings.json values on container create.
   "settings": { 

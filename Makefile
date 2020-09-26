@@ -8,6 +8,7 @@ clean:
 
 $(examples):
 	cookiecutter --no-input --config-file .cookiecutter/$@.yaml -f -o examples template
+	cd examples/$@; nix flake update
 
 .PHONY: build
 build:

@@ -5,6 +5,7 @@
   {% if cookiecutter.compose == "y" -%}
   "dockerComposeFile": "docker-compose.yml",
   "service": "dev",
+  "workspaceFolder": "/workspace"
   {%- else -%}
   "dockerFile": "Dockerfile",
   "build": {
@@ -14,8 +15,8 @@
     }
   },
   "runArgs": [
-    "-v", "project-templates_devcontainer_nix:/nix",
-    "-v", "project-templates_devcontainer_direnv-allow:/home/user/.config/direnv/allow",
+    "-v", "{{cookiecutter.project_slug}}_devcontainer_nix:/nix",
+    "-v", "{{cookiecutter.project_slug}}_devcontainer_direnv-allow:/home/user/.config/direnv/allow",
     "--security-opt", "label=disable"
   ],
   "containerEnv": {
