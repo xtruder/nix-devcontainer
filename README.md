@@ -87,7 +87,7 @@ generate required devcontainer definitions to use in your project.
    A simple devcontainer project using nix shell and direnv for bootstrapping of
    dev environment.
 
-- [simple-project](examples/simple-project-with-nix)
+- [simple-project-with-niv](examples/simple-project-with-niv)
 
    A simple devcontainer project using nix shell and direnv for bootstrapping of
    dev environment. Additionally it uses [niv](https://github.com/nmattia/niv) for
