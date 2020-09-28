@@ -10,11 +10,11 @@
     }
   },
   "mounts": [
+    "source=debian-nix-devcontainer_devcontainer_nix,target=/nix,type=volume",
+    "source=debian-nix-devcontainer_devcontainer_direnv,target=/home/user/.config/direnv/allow,type=volume",
     "source=/var/run/docker.sock,target=/var/run/docker.sock,type=bind"
   ],
   "runArgs": [
-    "-v", "debian-nix-devcontainer_devcontainer_nix:/nix",
-    "-v", "debian-nix-devcontainer_devcontainer_direnv-allow:/home/user/.config/direnv/allow",
     "--security-opt", "label=disable"
   ],
   "containerEnv": {

@@ -14,9 +14,11 @@
       "USER_GID": "${localEnv:USER_GID}"
     }
   },
+  "mounts": [
+    "source={{cookiecutter.project_slug}}_devcontainer_nix,target=/nix,type=volume",
+    "source={{cookiecutter.project_slug}}_devcontainer_direnv,target=/home/user/.config/direnv/allow,type=volume"
+  ],
   "runArgs": [
-    "-v", "{{cookiecutter.project_slug}}_devcontainer_nix:/nix",
-    "-v", "{{cookiecutter.project_slug}}_devcontainer_direnv-allow:/home/user/.config/direnv/allow",
     "--security-opt", "label=disable"
   ],
   "containerEnv": {
