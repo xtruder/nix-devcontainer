@@ -1,7 +1,7 @@
 // For format details, see https://aka.ms/vscode-remote/devcontainer.json or the definition README at
 // https://github.com/microsoft/vscode-dev-containers/tree/master/containers/docker-existing-dockerfile
 {
-  "name": "simple-project-with-flakes",
+  "name": "simple-project-with-niv",
   "dockerFile": "Dockerfile",
   "build": {
     "args": {
@@ -10,8 +10,8 @@
     }
   },
   "mounts": [
-    "source=simple-project-with-flakes_devcontainer_nix,target=/nix,type=volume",
-    "source=simple-project-with-flakes_devcontainer_direnv,target=/home/user/.config/direnv/allow,type=volume"
+    "source=simple-project-with-niv_devcontainer_nix,target=/nix,type=volume",
+    "source=simple-project-with-niv_devcontainer_direnv,target=/home/user/.config/direnv/allow,type=volume"
   ],
   "runArgs": [
     "--security-opt", "label=disable"

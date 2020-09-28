@@ -1,0 +1,7 @@
+default_context:
+    project_slug: simple-project-with-niv
+    workspace: n
+    flakes: n
+    compose: n
+    niv: y
+    nixpkgs_branch: nixos-20.09

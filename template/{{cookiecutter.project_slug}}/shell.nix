@@ -9,7 +9,9 @@
 
 pkgs.mkShell {
   buildInputs = with pkgs; [
+  {%- if cookiecutter.niv == "y" %}
     niv
+  {% endif -%}
   ];
 }
 {%- else -%}

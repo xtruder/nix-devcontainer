@@ -1,4 +1,4 @@
-examples = simple-project-with-flakes workspace-docker-compose-with-flakes
+examples = simple-project simple-project-with-niv simple-project-with-flakes workspace-docker-compose-with-flakes
 
 .PHONY: cookiecutter
 cookiecutter: clean $(examples)
@@ -8,7 +8,7 @@ clean:
 
 $(examples):
 	cookiecutter --no-input --config-file .cookiecutter/$@.yaml -f -o examples template
-	cd examples/$@; nix flake update
+	cd examples/$@; if [ -f flake.nix ]; then nix flake update; fi
 
 .PHONY: build
 build:
