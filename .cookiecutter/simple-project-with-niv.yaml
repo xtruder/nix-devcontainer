@@ -5,3 +5,4 @@ default_context:
     compose: n
     niv: y
     nixpkgs_branch: nixos-20.09
+    project_dir: /workspaces/debian-nix-devcontainer/examples/simple-project-with-niv

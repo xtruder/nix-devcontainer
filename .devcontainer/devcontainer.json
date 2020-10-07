@@ -18,7 +18,8 @@
     "--security-opt", "label=disable"
   ],
   "containerEnv": {
-    "PATH": "/home/user/.nix-profile/bin:/home/user/.local/bin:/usr/local/bin:/usr/bin:/bin"
+    "PATH": "/home/user/.nix-profile/bin:/home/user/.local/bin:/usr/local/bin:/usr/bin:/bin",
+    "PROJECT_DIR": "/workspaces/debian-nix-devcontainer"
   },
   
   // Set *default* container specific settings.json values on container create.
@@ -27,13 +28,10 @@
     "terminal.integrated.shellArgs.linux": ["-l"]
   },
 
-  "remoteEnv": {
-    "USER": "user"
-  },
+  "userEnvProbe": "loginInteractiveShell",
 
   // Add the IDs of extensions you want installed when the container is created.
   "extensions": [
-    "arrterian.nix-env-selector",
     "bbenoist.nix",
     "ms-azuretools.vscode-docker"
   ],

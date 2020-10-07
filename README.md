@@ -63,8 +63,6 @@ managed by [nix-shell](https://nixos.org/manual/nix/stable/#sec-nix-shell).
 - [nix-shell](https://nixos.org/manual/nix/stable/#sec-nix-shell) for
   bootstrapping of nix development environment
 - [direnv](https://direnv.net/) for integration of nix-shell with your shell
-- [nix-environment-selector](https://marketplace.visualstudio.com/items?itemName=arrterian.nix-env-selector)
-  **vscode extension** for running vscode inside of nix shell environment.
 - optional [docker-compose](https://docs.docker.com/compose/)
   (instead of using a single devcontainer)
 - optional [nix-flakes](https://www.tweag.io/blog/2020-05-25-flakes/)
@@ -144,8 +142,7 @@ file and want to overwrite them.
 
 Whether running an example or using a template, the setup should work out of the box. Open vscode press <kbd>F1</kbd>
 and choose **Remote-Containers: Reopen Folder in Container**, vscode will build your devcontainer and you should be
-ready to go. Also make sure **nix-env-selector** has set the correct environment set. In the status bar of vscode
-you should see **Environment: shell.nix**.
+ready to go.
 
 When **opening terminal** in vscode you will have to use `direnv allow` command to allow direnv to
 load nix shell. This is only required first time, since nix direnv allows are cached.
@@ -164,10 +161,10 @@ devcontainer.
 ### Reloading your nix shell environment
 
 After updating `shell.nix` or `flake.nix` (whether you are using nix flakes or not) with changes that
-affect your development environment, you will need to reload `nix-env-selector` environment by clicking
-`Environment: shell.nix` in vscode status bar. This will reload nix shell environment for vscode.
-After that you will need to reload vscode, but that should be fast operation, since vscode will reuse
-already running container. Your open terminals should auto reload nix shell, due `direnv`.
+affect your development environment, you will need to reload vscode by pressing <kbd>Ctrl+R</kbd> or by selecting
+`Developer: Reload Window` in command menu.
+This will restart vscode server running in container, which will probe for new environment by running
+`direnv`.
 
 ### Adding personalized dotfiles
 

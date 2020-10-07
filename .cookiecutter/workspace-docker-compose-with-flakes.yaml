@@ -5,3 +5,4 @@ default_context:
     compose: y
     niv: n
     nixpkgs_branch: nixos-20.09
+    project_dir: /workspace

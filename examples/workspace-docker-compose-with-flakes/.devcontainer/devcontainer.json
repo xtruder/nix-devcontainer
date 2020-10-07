@@ -12,13 +12,10 @@
     "terminal.integrated.shellArgs.linux": ["-l"]
   },
 
-  "remoteEnv": {
-    "USER": "user"
-  },
+  "userEnvProbe": "loginInteractiveShell",
 
   // Add the IDs of extensions you want installed when the container is created.
   "extensions": [
-    "arrterian.nix-env-selector",
     "bbenoist.nix"
   ],
 

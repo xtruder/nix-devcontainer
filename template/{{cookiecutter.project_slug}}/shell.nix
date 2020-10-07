@@ -1,6 +1,6 @@
 {%- if cookiecutter.flakes != "y" -%}
 { {% if cookiecutter.niv == "y" -%}
-  sources ? ./nix/sources.nix,
+  sources ? import ./nix/sources.nix,
   pkgs ? import sources.nixpkgs {}
 {%- else -%}
   src ? builtins.fetchTarball "https://github.com/NixOS/nixpkgs/archive/{{cookiecutter.nixpkgs_branch}}.tar.gz",

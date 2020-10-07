@@ -47,10 +47,13 @@ RUN curl -L ${NIX_INSTALL_SCRIPT} | sudo -u user sh
 ARG EXTRA_NIX_CONFIG=""
 RUN mkdir -p /etc/nix && echo "sandbox = false\n$EXTRA_NIX_CONFIG" > /etc/nix/nix.conf
 
+COPY profile.sh /etc/profile.d/devcontainer.sh
+
 # onbuild uid and gid fixes
 ONBUILD ARG USERNAME=user
 ONBUILD ARG USER_UID=1000
 ONBUILD ARG USER_GID=${USER_UID}
+ONBUILD ENV USER=${USERNAME}
 ONBUILD RUN \
     set -x && \
     if [ -z ${USER_UID} ] || [ -z ${USER_UID} ] || [ -z ${USERNAME} ]; then exit 0; fi && \
@@ -63,3 +66,8 @@ ONBUILD RUN \
 
 # create volume for nix, this needs to be here, so permissions are correct
 ONBUILD VOLUME /nix
+
+# create volume for direnv
+ONBUILD RUN sudo -u user mkdir -p /home/${USERNAME}/.config/direnv/allow
+ONBUILD VOLUME /home/${USERNAME}/.config/direnv/allow
+
