@@ -41,7 +41,7 @@ RUN groupadd --gid ${USER_GID} ${USERNAME} && \
 
 # install nix
 ARG NIX_INSTALL_SCRIPT=https://nixos.org/nix/install
-RUN curl -L ${NIX_INSTALL_SCRIPT} | sudo -u user sh
+RUN curl -L ${NIX_INSTALL_SCRIPT} | sudo -u user NIX_INSTALLER_NO_MODIFY_PROFILE=1 sh
 
 # configure nix
 ARG EXTRA_NIX_CONFIG=""
