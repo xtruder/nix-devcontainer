@@ -94,7 +94,7 @@ jobs:
           push: ${{ github.event_name != 'pull_request' }}
           tags: ${{ steps.prep.outputs.flake_tags }}
           build-args: |
-            NIX_INSTALL_SCRIPT=https://github.com/numtide/nix-flakes-installer/releases/download/nix-3.0pre20200820_4d77513/install,
+            NIX_INSTALL_SCRIPT=https://github.com/numtide/nix-flakes-installer/releases/download/nix-3.0pre20201007_5257a25/install
             EXTRA_NIX_CONFIG=experimental-features = nix-command flakes
           labels: |
             org.opencontainers.image.title=${{ github.event.repository.name }}
