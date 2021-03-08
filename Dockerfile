@@ -47,7 +47,9 @@ RUN curl -L ${NIX_INSTALL_SCRIPT} | sudo -u user NIX_INSTALLER_NO_MODIFY_PROFILE
 ARG EXTRA_NIX_CONFIG=""
 RUN mkdir -p /etc/nix && echo "sandbox = false\n$EXTRA_NIX_CONFIG" > /etc/nix/nix.conf
 
+# install devcontainer extra profile and bashrc that loads direnv
 COPY profile.sh /etc/profile.d/devcontainer.sh
+COPY bash.bashrc /etc/bash.bashrc
 
 # onbuild uid and gid fixes
 ONBUILD ARG USERNAME=user
