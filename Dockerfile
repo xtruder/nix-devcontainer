@@ -70,6 +70,5 @@ ONBUILD RUN \
 ONBUILD VOLUME /nix
 
 # create volume for direnv
-ONBUILD RUN sudo -u user mkdir -p /home/${USERNAME}/.config/direnv/allow
-ONBUILD VOLUME /home/${USERNAME}/.config/direnv/allow
-
+ONBUILD RUN sudo -u user mkdir -p /home/${USERNAME}/.local/share/direnv/allow
+ONBUILD VOLUME /home/${USERNAME}/.local/share/direnv/allow
