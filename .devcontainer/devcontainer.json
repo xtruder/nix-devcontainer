@@ -11,7 +11,7 @@
   },
   "mounts": [
     "source=debian-nix-devcontainer_devcontainer_nix,target=/nix,type=volume",
-    "source=debian-nix-devcontainer_devcontainer_direnv,target=/home/user/.config/direnv/allow,type=volume",
+    "source=debian-nix-devcontainer_devcontainer_direnv,target=/home/user/.local/share/direnv/allow,type=volume",
     "source=/var/run/docker.sock,target=/var/run/docker.sock,type=bind"
   ],
   "runArgs": [

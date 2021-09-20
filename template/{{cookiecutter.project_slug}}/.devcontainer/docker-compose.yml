@@ -14,7 +14,7 @@ services:
     volumes:
       - ..:/workspace:cached
       - nix:/nix
-      - direnv-allow:/home/user/.config/direnv/allow
+      - direnv-allow:/home/user/.local/share/direnv/allow
     security_opt:
       - label:disable
     network_mode: bridge

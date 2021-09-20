@@ -16,7 +16,7 @@
   },
   "mounts": [
     "source={{cookiecutter.project_slug}}_devcontainer_nix,target=/nix,type=volume",
-    "source={{cookiecutter.project_slug}}_devcontainer_direnv,target=/home/user/.config/direnv/allow,type=volume"
+    "source={{cookiecutter.project_slug}}_devcontainer_direnv,target=/home/user/.local/share/direnv/allow,type=volume"
   ],
   "runArgs": [
     "--security-opt", "label=disable"

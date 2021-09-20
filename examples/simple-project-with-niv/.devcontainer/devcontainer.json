@@ -11,7 +11,7 @@
   },
   "mounts": [
     "source=simple-project-with-niv_devcontainer_nix,target=/nix,type=volume",
-    "source=simple-project-with-niv_devcontainer_direnv,target=/home/user/.config/direnv/allow,type=volume"
+    "source=simple-project-with-niv_devcontainer_direnv,target=/home/user/.local/share/direnv/allow,type=volume"
   ],
   "runArgs": [
     "--security-opt", "label=disable"
