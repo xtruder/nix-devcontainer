@@ -77,16 +77,12 @@ func main() {
 	defer watcher.Close()
 
 	var extensionsDir string
-	if pathExists(path.Join(home, ".vscode-remote")) {
-		extensionsDir = path.Join(home, ".vscode-remote", "extensions")
-	} else if pathExists(path.Join(home, ".vscode-server")) {
+	if pathExists(path.Join(home, ".vscode-server")) {
 		extensionsDir = path.Join(home, ".vscode-server", "extensions")
+	} else if pathExists(path.Join(home, ".vscode-remote")) {
+		extensionsDir = path.Join(home, ".vscode-remote", "extensions")
 	} else {
-		if os.Getenv("CODESPACES") == "true" {
-			extensionsDir = path.Join(home, ".vscode-remote", "extensions")
-		} else {
-			extensionsDir = path.Join(home, ".vscode-server", "extensions")
-		}
+		extensionsDir = path.Join(home, ".vscode-server", "extensions")
 	}
 
 	if err := os.MkdirAll(extensionsDir, 0755); err != nil {
