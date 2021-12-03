@@ -9,7 +9,6 @@ services:
         USER_GID: ${USER_GID:-1000}
     environment:
       DOCKER_HOST: tcp://localhost:2375
-      PRELOAD_EXTENSIONS: "arrterian.nix-env-selector"
     volumes:
       - ..:/workspace:cached
       - nix:/nix
