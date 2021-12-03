@@ -201,6 +201,7 @@ Example `.devcontainer/devcontainer.json`:
   "service": "dev",
   "workspaceFolder": "/workspace",
   
+  "userEnvProbe": "loginShell",
   "updateRemoteUserUID": false,
 
   // build development environment on creation

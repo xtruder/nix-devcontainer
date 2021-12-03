@@ -6,6 +6,7 @@
   "service": "dev",
   "workspaceFolder": "/workspace",
   
+  "userEnvProbe": "loginShell",
   "updateRemoteUserUID": false,
 
   "onCreateCommand": "nix-shell --command 'echo done building nix dev environment'",
