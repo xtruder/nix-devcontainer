@@ -1,3 +1,13 @@
 {
-    "nixEnvSelector.nixShellConfig": "${workspaceRoot}/shell.nix"
+    "nixEnvSelector.nixFile": "${workspaceRoot}/shell.nix",
+    "nix.enableLanguageServer": true,
+    "runItOn": {
+        "commands": [
+            {
+                "match": "flake\\.nix",
+                "isShellCommand": false,
+                "cmd": "nixEnvSelector.hitEnv"
+            }
+        ]
+    }
 }

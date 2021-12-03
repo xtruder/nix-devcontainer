@@ -1,8 +1,0 @@
-default_context:
-    project_slug: workspace-docker-compose-with-flakes
-    workspace: y
-    flakes: y
-    compose: y
-    niv: n
-    nixpkgs_branch: nixos-20.09
-    project_dir: /workspace

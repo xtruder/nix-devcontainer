@@ -1,0 +1,15 @@
+USER=$(whoami)
+
+# load nix into environment
+if [ -e $HOME/.nix-profile/etc/profile.d/nix.sh ] ; then
+    . $HOME/.nix-profile/etc/profile.d/nix.sh
+fi
+
+# add $HOME/.nix-profile/share to XDG_DATA_DIRS, so completions for packages
+# installed with nix work
+if [ -e $HOME/.nix-profile ] ; then
+    XDG_DATA_DIRS="$XDG_DATA_DIRS:$HOME/.nix-profile/share"
+fi
+XDG_DATA_DIRS="$XDG_DATA_DIRS:/usr/share"
+
+ENVRC_RUN=yes

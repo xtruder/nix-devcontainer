@@ -1,191 +1,339 @@
-# debian-nix-devcontainer
+# nix-devcontainer
 
 ## Summary
 
-VSCode devcontainer that uses `debian` as base system and `nix-shell` for
-management of development environment
+**Swiss army knife container for vscode development environments**
 
-| Metadata | Value |  
-|----------|-------|
-| *Contributors* | Jaka Hudoklin <jaka@x-truder.net> (github.com/offlinehacker) |
-| *Definition type* | standalone or Docker Compose |
-| *Works in Codespaces* | Yes |
-| *Container host OS support* | Linux, macOS, Windows |
-| *Languages, platforms* | All languages that nix supports |
-| *Base image* | xtruder/debian-nix-devcontainer |
-| *Image tags* | latest, flakes |
+| Metadata                    | Value                                                                         |
+| --------------------------- | ----------------------------------------------------------------------------- |
+| *Maintainer*                | Jaka Hudoklin <jaka@x-truder.net> [@offlinehacker](github.com/offlinehacker)  |
+| *Contributors*              | [@offlinehacker](github.com/offlinehacker), [@Rizary](github.com/rizary)      |
+| *Definition type*           | standalone or Docker Compose                                                  |
+| *Works in Codespaces*       | Yes                                                                           |
+| *Container host OS support* | Linux, macOS, Windows                                                         |
+| *Languages, platforms*      | All languages that nix supports                                               |
+| *Base image*                | [xtruder/nix-devcontainer](https://hub.docker.com/r/xtruder/nix-devcontainer) |
+| *Image tags*                | latest                                                                        |
 
 ## Description
 
-Debian nix devcontainer is [vscode devcontainer](https://code.visualstudio.com/docs/remote/containers)
-that uses debian as a base system and nix for project development environment.
-Idea is that system tools are managed by **apt** and development environment is
-managed by [nix-shell](https://nixos.org/manual/nix/stable/#sec-nix-shell).
+Nix devcontainer is an opinionated [vscode devcontainer](https://code.visualstudio.com/docs/remote/containers)
+that uses debian image for a base system and [nix package manager](https://nixos.org/)
+for management of your development environments. Combination
+of a good base image and a best in class package manager, gives
+you versatile, reproduible and deterministic development container
+that you can use for everywhere.
 
-### Goals:
+### Components
 
-- **Keep it simple**
+- **[Debian slim](https://hub.docker.com/_/debian) docker image**
 
-   Goal is to keep devcontainer simple, so it is easy to maintain. I really
-   dislike how microsoft is [hacking up development containers](https://github.com/microsoft/vscode-dev-containers/blob/master/containers/go/.devcontainer/base.Dockerfile) by smashing together a bunch of shell scripts. At the same time i do not like the nix docker image building
-   facility, which is again [bunch of bash scripts](https://github.com/NixOS/nixpkgs/blob/master/pkgs/build-support/docker/default.nix)
-   producing a docker image.
+   Docker base image, which provides minimalistic environment in which both nix and
+   vscode remote extension can run without any issues.
 
-   Less is more, less hacks means more fun.
+- **[Nix package manager](https://nixos.org/)**
 
-- **Be more compatible**
+  Used for providing declarative, deterministic and reporoducible development environment that
+  you can run anywhere. Imagine better [conda](https://docs.conda.io/en/latest/) alternative.
+  You write a single `shell.nix` file that describes your environment and all your tools and
+  vscode extensions will be running with same exact versions of binaries, same environment
+  variables, same libraries forever.
 
-   Be as compatible with different systems as possible. Whether using with
-   devcontainers or with codespaces, or just using docker-compose locally.
-   It should be easy to transition.
+- **[Nix Environment Selector](https://marketplace.visualstudio.com/items?itemName=arrterian.nix-env-selector) vscode extension**
 
-- **Use right tool for the job**
+   Used to automatically load nix development environment into your vscode and provides
+   capabilities to reload it later when environment changes, without having to rebuild
+   docker image from scratch on every change.
 
-   I don't want to have multiple devcontainers for different programming
-   languages. I think that project environment should be managed by
-   independent tool, that you can run independent whether you develop your
-   project in containers, vms or on physical machine.
+- **[Direnv](https://direnv.net/) shell environment loader**
 
-   [nix-shell](https://nixos.org/manual/nix/stable/#sec-nix-shell) provides
-   reproducible development environments and can be used across many
-   languages.
-
-- **Keep good productivity**
-
-   While pure development environments provide much greater guarantees,
-   they can provide burden for a developer.
-
-### Features
-
-- minimal debian as base system
-- [nix](https://nixos.org/) for development environment with cached nix
-  store even between container rebuilds (using docker volumes)
-- [nix-shell](https://nixos.org/manual/nix/stable/#sec-nix-shell) for
-  bootstrapping of nix development environment
-- [direnv](https://direnv.net/) for integration of nix-shell with your shell
-- optional [docker-compose](https://docs.docker.com/compose/)
-  (instead of using a single devcontainer)
-- optional [nix-flakes](https://www.tweag.io/blog/2020-05-25-flakes/)
-  support for better determinism
+   While nix environment loader extension loads environment for vscode, you
+   want `direnv` to manage you shell environment. `Direnv` loads nix environment
+   (defined by `shell.nix` file) into your shell and reloads it automatically when it changes,
+   keeping your environment fresh.
 
 ## Adding devcontainer definition into your project
 
 If this is your first time using a development container, please follow the
 [getting started steps](https://aka.ms/vscode-remote/containers/getting-started)
-to set up your machine.
+to set up your machine, install docker and vscode remote extensions.
 
-This project provides several [examples](examples/) of devcontainers for
-different use cases and also a [template](template/) from which you can
-generate required devcontainer definitions to use in your project.
+### Example templates
 
-### Examples
+There are sevaral example templates you can use to quickly bootstrap your project:
 
-- [simple-project](examples/simple-project)
+- [nix-devcontainer-golang](https://github.com/xtruder/nix-devcontainer-golang/)
+  
+  Example project using `nix-devcontainer` for golang development, with docker-compose
+  running docker-in-docker service for building docker images.
 
-   A simple devcontainer project using nix shell and direnv for bootstrapping of
-   dev environment.
+- [nix-devcontainer-python-jupyter](https://github.com/xtruder/nix-devcontainer-python-jupyter/)
+  
+  Example project using `nix-devcontainer` for python and jupyter notebooks,
+  with python packages managed by nix.
 
-- [simple-project-with-niv](examples/simple-project-with-niv)
+### Project setup
 
-   A simple devcontainer project using nix shell and direnv for bootstrapping of
-   dev environment. Additionally it uses [niv](https://github.com/nmattia/niv) for
-   nix dependency management. 
+Make sure that your project has `shell.nix` that describes your development
+environment. Internally nix environment selector vscode extension runs
+`nix-shell` to configure vscode's development environment.
 
-- [simple-project-with-flakes](examples/simple-project-with-flakes)
+Here is minimal example of `shell.nix` to get you started:
 
-   A simple devcontainer project using nix shell and direnv for bootstrapping of
-   dev environment. Additionally it uses nix flakes for nix dependency management. 
+```nix
+{ pkgs ? import <nixpkgs> { } }:
 
-- [workspace-docker-compose-with-flakes](examples/workspace-docker-compose-with-flakes)
+pkgs.mkShell {
+  # nativeBuildInputs is usually what you want -- tools you need to run
+  nativeBuildInputs = with pkgs; [
+     #hello
+  ];
+}
+```
 
-   Workspace devcontainer using docker-compose and nix flakes.
+If you want `nix-shell` to automatically run for your shell environemnts
+running in your development container, create `.envrc` file.
 
-### Template
-
-This project contains [cookiecutter](https://github.com/cookiecutter/cookiecutter) template
-with which you can quickly bootstrap devcontainer setup in your project.
-
-Using template is simple as:
+A minimal example of `.envrc` file:
 
 ```shell
-cookiecutter --directory template https://github.com/xtruder/debian-nix-devcontainer.git
+use_nix
 ```
 
-Example usage:
+For more informattion on how to develop with `nix-shell` you can take a
+look here: https://nixos.wiki/wiki/Development_environment_with_nix-shell
 
+### Devcontainer integration
+
+Integrating `devcontainer` into your project is as simple as creating `devcontainer.json` file and a
+`Dockerfile` in `.devcontainer` directory.
+
+Example `.devcontainer/devcontainer.json`:
+
+```jsonc
+// For format details, see https://aka.ms/vscode-remote/devcontainer.json or the definition README at
+// https://github.com/microsoft/vscode-dev-containers/tree/master/containers/docker-existing-dockerfile
+{
+  "name": "devcontainer-project",
+  "dockerFile": "Dockerfile",
+  "context": "${localWorkspaceFolder}",
+  "build": {
+    "args": {
+      "USER_UID": "${localEnv:USER_UID}",
+      "USER_GID": "${localEnv:USER_GID}"
+    },
+  },
+
+  // run arguments passed to docker
+  "runArgs": [
+    "--security-opt", "label=disable"
+  ],
+
+  "containerEnv": {
+     // extensions to preload before other extensions
+    "PRELOAD_EXTENSIONS": "arrterian.nix-env-selector"
+  },
+
+   // disable command overriding and updating remote user ID
+  "overrideCommand": false,
+  "updateRemoteUserUID": false,
+
+  // build development environment on creation, make sure you already have shell.nix
+  //"onCreateCommand": "nix-shell --command 'echo done building nix dev environment'",
+
+  // Add the IDs of extensions you want installed when the container is created.
+  "extensions": [
+    // select nix environment
+    "arrterian.nix-env-selector",
+
+    // extra extensions
+    //"fsevenm.run-it-on",
+    //"jnoortheen.nix-ide",
+    //"ms-python.python"
+  ],
+
+  // Use 'forwardPorts' to make a list of ports inside the container available locally.
+  "forwardPorts": [],
+
+  // Use 'postCreateCommand' to run commands after the container is created.
+  // "postCreateCommand": "go version",
+}
 ```
-cookiecutter --directory template https://github.com/xtruder/debian-nix-devcontainer.git
-project_slug [project]: 
-image []: 
-workspace [n]: 
-flakes [y]: 
-compose [y]: 
-niv [n]: 
-nixpkgs_branch [nixos-20.09]
+
+Example `.devcontainer/Dockerfile`:
+
+```dockerfile
+FROM xtruder/nix-devcontainer
 ```
 
-cookiecutter asks for several inputs required for generation:
+**Dockerfile is needed for build triggers to run.** Build triggers will change
+user `uid` and `gid` to one provided by `USER_UID` and `USER_GID` env variables
+and change ownersip of `/nix` and `/home` folders. This is required, as
+docker currently does not provide a way to map filesystem uids/gids.
+If you don't need this and your host user always has `1000:1000` uid/gid,
+you can also specify image directly by setting `image` parameter
+in `devcontainer.json`
 
-- **project_slug**: name of the project and also name of output directory where files are generated
-- **image**: base image to use, by default uses `debian:latest` as base image
-- **workspace**: whether to generate workspace project
-- **flakes**: whether to use experimental [nix-flakes](https://www.tweag.io/blog/2020-05-25-flakes/)
-- **compose**: whether to use `docker-compose` instead of single devcontainer
-- **niv**: whether to use [niv](https://github.com/nmattia/niv) for nix dependency management
-- **nixpkgs_branch**: nixpkgs branch to use (to use unstable choose: `nixos-unstable`)
+If you already have your `shell.nix`, you can also set to use it in your
+project `.vscode/settings.json` file:
 
-If you have existing project and would like to generate files into that project, select
-`project-slug` with name of your project. You might need to force generate if you have existing
-file and want to overwrite them.
+```json
+{
+    "nixEnvSelector.nixFile": "${workspaceRoot}/shell.nix",
+}
+```
+
+### Using docker-compose instead
+
+Alternatively you can use `docker-compose` instead. This allows you to run multiple
+services and have more control over development environment. In this case you need
+to specify path to compose file in your `devcontainer.json` file. Compose file
+can also be in your project root if you prefer.
+
+Example `.devcontainer/devcontainer.json`:
+
+```jsonc
+// For format details, see https://aka.ms/vscode-remote/devcontainer.json or the definition README at
+// https://github.com/microsoft/vscode-dev-containers/tree/master/containers/docker-existing-dockerfile
+{
+  "name": "devcontainer-project",
+  "dockerComposeFile": "docker-compose.yml",
+  "service": "dev",
+  "workspaceFolder": "/workspace",
+  
+  "updateRemoteUserUID": false,
+
+  // build development environment on creation
+  "onCreateCommand": "nix-shell --command 'echo done building nix dev environment'",
+
+  // Add the IDs of extensions you want installed when the container is created.
+  "extensions": [
+    // select nix environment
+    "arrterian.nix-env-selector",
+
+    // extra extensions
+    //"fsevenm.run-it-on",
+    //"jnoortheen.nix-ide",
+    //"ms-python.python"
+  ],
+}
+```
+
+Example `.devcontainer/docker-compose.yml`:
+
+```yaml
+version: '3'
+services:
+  dev:
+    build:
+      context: ../
+      dockerfile: .devcontainer/Dockerfile
+      args:
+        USER_UID: ${USER_UID:-1000}
+        USER_GID: ${USER_GID:-1000}
+    environment:
+      # list of docker extensions to load before other extensions
+      PRELOAD_EXTENSIONS: "arrterian.nix-env-selector"
+    volumes:
+      - ..:/workspace:cached
+    security_opt:
+      - label:disable
+    network_mode: "bridge"
+```
 
 ## Running
 
-Whether running an example or using a template, the setup should work out of the box. Open vscode press <kbd>F1</kbd>
-and choose **Remote-Containers: Reopen Folder in Container**, vscode will build your devcontainer and you should be
-ready to go.
+When you open a project vscode should ask you to open project in remote container.
+If you click to open in remove container, dev environment should be built
+automatically and after you should be ready to start coding.
 
-When **opening terminal** in vscode you will have to use `direnv allow` command to allow direnv to
-load nix shell. This is only required first time, since nix direnv allows are cached.
+Alternativelly you can choose **Remote-Containers: Reopen Folder in Container** from command menu.
 
-If opening a workspace, please make sure you open workspace in devcontainer and not a project. VSCode
-does not currently provide a popup for opening a workspace in devcontainer, but will only provide you
-with an option to open a project in devcontainer or to open workspace locally, but this is not what you want.
+If opening a workspace, please make sure you open workspace in devcontainer by selecting
+**Remote-Containers: Open workspace in Container". Remote containers extension does not
+currently provide a popup for opening a workspace, but will only provide you with an option
+to open a project in devcontainer or to open workspace locally, but this is not what you want.
 
-If `uid` or `gid` of user running `vscode` is not equal to `1000:1000`, you will have to set `USER_UID` and
-`USER_GID` environment variables. This should be set globally or in a shell you are running `code` command from.
-`vscode` inherits environment from where it is started, but make sure these environment variables are set or
-files will have invalid permissions. If you change your local user `uid` or `gid` while already running a project
-in devcontainer, you will have to remove all named volumes associated with devcontainer and also do rebuild of
-devcontainer.
+If running under linux and `uid` or `gid` of user running `vscode` are not equal to `1000:1000`,
+you will have to set `USER_UID` and `USER_GID` environment variables.
+These should be set globally or in a shell you are running `code` command from. `vscode`
+inherits environment from where it is started, but make sure these environment variables
+are set or files will have incorrect permissions.
 
-### Reloading your nix shell environment
+This is a list of `nix-devcontainer` image build arguments and its defaults:
 
-After updating `shell.nix` or `flake.nix` (whether you are using nix flakes or not) with changes that
-affect your development environment, you will need to reload vscode by pressing <kbd>Ctrl+R</kbd> or by selecting
-`Developer: Reload Window` in command menu.
-This will restart vscode server running in container, which will probe for new environment by running
-`direnv`.
+| Name     | Description                       | Default |
+| -------- | --------------------------------- | ------- |
+| USERNAME | Username of the user in container | code    |
+| USER_UID | ID of the user in container       | 1000    |
+| USER_GID | Group ID of the user in container | 1000    |
+
+### Rebuilding your development environment
+
+After updating `shell.nix` with changes that affect your development environment.
+If you are using nix environment selector extension you can choose `Nix-Env: Hit environment`
+from command menu and it will rebuild your environment and after that it will ask you
+to reload your editor.
+
+Alternatively you can also reload your editor by choosing `Developer: Rebuild Container`
+and it will rebuild your environment on editor start.
+
+### Atomatically rebuilding environment on environment changes
+
+If you want to automatomatically rebuild your environment when `shell.nix` changes
+you can use `fsevenm.run-it-on` extension and choose to automatically run
+`nixEnvSelector.hitEnv` command. Here is an example of settings you can put in your
+workspace settings (`.vscode/settings.json` file in your project.)
+
+```jsonc
+{
+    "runItOn": {
+        "commands": [
+            {
+                "match": "flake\\.nix",
+                "isShellCommand": false,
+                "cmd": "nixEnvSelector.hitEnv"
+            }
+        ]
+    }
+}
+```
 
 ### Adding personalized dotfiles
 
-VSCode has internal for cloning dotfiles repo and running custom install script when devcontainer is opened.
+VSCode remote containers have internal support for cloning dotfiles repo and running
+custom install script when devcontainer is opened.
 Check how to personalize your environment [here](https://code.visualstudio.com/docs/remote/containers#_personalizing-with-dotfile-repositories).
 An example of dotfiles repository is available [here](https://github.com/offlinehacker/dotfiles).
 
 ### Adding another service
 
-If you need to add another service, please make sure you are using `docker-compose` setup and not a simple
-`devcontainer`, since it does not support running multiple services.
+If you need to add another service, please make sure you are using `docker-compose` and not a plain
+`devcontainer.json`, since it does not support running multiple services.
 
-You can add other services to your `docker-compose.yml` file [as described in Dockers documentation](https://docs.docker.com/compose/compose-file/#service-configuration-reference). However, if you want anything running in this service to be available
-in the container on localhost, or want to forward the service locally, be sure to add this line to the service config:
+You can add other services to your `docker-compose.yml` file [as described in Dockers documentation](https://docs.docker.com/compose/compose-file/#service-configuration-reference). However, if you want anything running in these service to be available
+in the dev container on localhost, or want to forward the service locally,
+be sure to add this line to the `docker-compose` service config:
 
 ```yaml
-# Runs the service on the same network as the app container, allows "forwardPorts" in devcontainer.json function.
+# Runs the service in the same network namespace as the dev container,
+# keeping services on localhost makes life easier
 network_mode: service:app
 ```
 
-This will make sure your devcontainer and service container are running in same network namespace.
+This will make sure your dev container and service containers are running in same network namespace.
+
+### Caching nix store
+
+Caching nix store is as simple as adding named docker volume on `/nix`.
+
+```dockerfile
+FROM xtruder/nix-devcontainer
+VOLUME /nix
+```
+
+Then add named docker volume to `devcontainer.json` or `docker-compose.yml` as explained
+in next paragraph.
 
 ### Caching additional directories using docker volumes
 
@@ -193,88 +341,164 @@ You can cache additional directories using docker volumes. You will need to make
 have right permissions. To do that you need to first create directory in your `Dockerfile` and
 set it as a volume and later put named volume in your `docker-compose.yml` or in `devcontainer.json`.
 
-1. Add `VOLUME` definition to `Dockerfile`
+1. Create directory and add volume to your `Dockerfile`
 
-```Dockerfile
-RUN sudo -u user mkdir -p /home/${USERNAME}/.cache
-VOLUME /home/${USERNAME}/.cache
-```
+   ```dockerfile
+   RUN mkdir -p /home/${USERNAME}/.cache
+   VOLUME /home/${USERNAME}/.cache
+   ```
 
-2. Add named volume to `docker-compose`:
+1. Add named volume to `devcontainer.json` or `docker-compose.yml`:
 
-If you are using `docker-compose` you can add the following to your `docker-compose.yml` in
-`.devcontainer` directory. This will mount named volume to desired location.
+   ```jsonc
+   {
+      "name": "project-name",
+      //...,
+      "mounts: [
+         "source=project-name_devcontainer_home-cache,target=/home/user/.cache,type=volume"
+      ]
+   }
+   ```
 
-```yaml
-version: '3'
-services:
-   dev:
-      ...
-      volumes:
-         - home-cache:/home/user/.cache
-volumes:
-   home-cache
-```
+   Alternatively If you are using `docker-compose` you can add the following to
+   your `docker-compose.yml` in `.devcontainer` directory. This will mount named
+   volume to your desired location.
 
-3. Add named volume to `devcontainer.json` run arguments:
+   ```yaml
+   version: '3'
+   services:
+      dev:
+         ...
+         volumes:
+            - home-cache:/home/user/.cache
 
-If not using `docker-compose`, you can achieve the same result by adding named volume to
-your `devcontainer.json` mounts:
+   volumes:
+      home-cache
+   ```
 
-```json
-{
-   "name": "project-name",
-   ...,
-   "mounts: [
-      "source=project-name_devcontainer_home-cache,target=/home/user/.cache,type=volume"
-   ]
-}
-```
+### docker-in-docker or how to use `docker` inside devcontainer
 
-### Using `docker` inside devcontainer
-
-There are several ways how to use docker inside devcontainer. The easiest would be just
+There are several ways how to use docker inside devcontainer. The easiest is just
 to mount `docker.sock` in devcontainer:
 
 1. Add mount in `docker-compose.yml` or `devcontainer.json`:
 
-```yaml
-version: '3'
-services:
-   dev:
-      ...
-      volumes:
-         - type: bind
-           source: /var/run/docker.sock
-           target: /var/run/docker.sock
-```
+   ```yaml
+   version: '3'
+   services:
+      dev:
+         ...
+         volumes:
+            - type: bind
+            source: /var/run/docker.sock
+            target: /var/run/docker.sock
+   ```
 
-```json
-{
-   ...,
-   "mounts": [
-     "source=/var/run/docker.sock,target=/var/run/docker.sock,type=bind"
-   ]
-}
-```
+   ```jsonc
+   {
+     //...,
+     "mounts": [
+       "source=/var/run/docker.sock,target=/var/run/docker.sock,type=bind"
+     ]
+   }
+   ```
 
 2. (Optional) Add user to docker group in your `Dockerfile`
 
-```Dockerfile
-ARG DOCKER_GID=966
-RUN groupadd -g ${DOCKER_GID} docker && usermod -a -G docker ${USERNAME} 
-```
+   ```Dockerfile
+   ARG DOCKER_GID=966
+   RUN groupadd -g ${DOCKER_GID} docker && usermod -a -G docker ${USERNAME} 
+   ```
 
 **Exposing docker socket to your development environment is a security risk, as it
 exposes your system to potentially malicious development environment. Make sure
 you never run untrusted code in such environment.**
 
 Better alternative is to run rootless docker in docker as separate privileged service
-via `docker-compose`. That should mitigate most common security risks, but please be
-aware 
+via `docker-compose`. That should mitigate most security risks, but
+because it uses `fuser-overlays` it is slower. An example of such rootless docker
+image and README how to integrate in `docker-compose` is avalible here:
+https://hub.docker.com/r/xtruder/dind-rootless
+
+### Preload vscode extensions (run nix env selector before other extensions)
+
+Some vscode extensions have issue that development environment is loaded too
+late. Currently vscode does not support an option to make extensions load after
+some other extension, but only supports extension dependencies, where one extension
+can wait for other extension to load, see also https://github.com/microsoft/vscode/issues/57481.
+
+To workaround this issue we have implemented a hack, a vscode extension preloader
+that modifies extensions `package.json` on the fly to make extensions depend on
+other set of extensions while they are installed, but before they are loaded.
+
+You can enable this feature/hack by setting `PRELOAD_EXTENSIONS` environment
+variable in your `devcontainer.json` or `docker-compose.yml`.
+
+Example `devcontainer.json` settings:
+
+```jsonc
+{
+  //...
+  "containerEnv": {
+    "PRELOAD_EXTENSIONS": "arrterian.nix-env-selector"
+  },
+  //...
+
+  "extensions": [
+    "arrterian.nix-env-selector",
+    //...
+  ]
+}
+```
+
+### Using with podman
+
+Running this devcontainer with Podman is currently not supported, due to vscode remote
+containers not supporting passing build flags to `podman` and `podman-compose`.
+See also https://github.com/microsoft/vscode-remote-release/issues/3545, there is also
+a possible workaround, but i haven't tried it yet.
+
+## Technical details
+
+### How environment is loaded?
+
+- Vscode starts devcontainer from `devcontainer.json` definition
+- `.devcontainer/Dockerfile` (that inherits from this image) is
+  used to build development container, several `ONBUILD` docker triggers
+  are run to change user `uid` and `gid` of non-root user (`code` by default)
+  in container and fix ownership of files.
+- Upon start vscode installs extensions defined in `devcontainer.json`, including
+  `arrterian.nix-env-selector`.
+- `arrterian.nix-env-selector` extension evaluates development shell defined in
+  `shell.nix` file and sets vscode environment variables based on that environment.
+- All other extensions are loaded into vscode.
+- When you start vscode terminal, environment variables are not automatically inherited
+  from `vscode`, that's why this devcontainer sets `direnv` shell hook to automatically
+  load environment into your shell.
+
+## Development
+
+It's recommended to open this project in vscode devcontainer or via github
+codespaces. This will automatically prepare development environment with
+all required dependencies.
+
+### Project structure
+
+- `examples` - devcontainer examples
+- `src` - image source
+- `test` - image smoke test
+
+### Testing
+
+For basic validity testing you should run `make test`, which will build test
+image and runs tests in image. Sanity checks are run by first running
+direnv hook which loads nix environment and then it sources `test.sh` script,
+which does a few basic sanity checks.
+
+You should also check if image works with example templates.
 
 ## License
 
 Copyright (c) X-Truder. All rights reserved.
 
-Licensed under the MIT License. See [LICENSE](https://github.com/xtruder/debian-nix-devcontainer/blob/master/LICENSE).
+Licensed under the MIT License. See [LICENSE](https://github.com/xtruder/nix-devcontainer/blob/master/LICENSE).
