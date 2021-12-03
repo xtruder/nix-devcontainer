@@ -25,15 +25,6 @@ func contains(s []interface{}, e string) bool {
 	return false
 }
 
-func pathExists(path string) (bool) {
-    _, err := os.Stat(path)
-
-    if err == nil { return true }
-    if os.IsNotExist(err) { return false }
-
-	panic(err)
-}
-
 var (
 	debugLogger *log.Logger
 	infoLogger  *log.Logger
@@ -76,20 +67,13 @@ func main() {
 	watcher, _ := fsnotify.NewWatcher()
 	defer watcher.Close()
 
-	var extensionsDir string
-	if pathExists(path.Join(home, ".vscode-server")) {
-		extensionsDir = path.Join(home, ".vscode-server", "extensions")
-	} else if pathExists(path.Join(home, ".vscode-remote")) {
-		extensionsDir = path.Join(home, ".vscode-remote", "extensions")
-	} else {
-		extensionsDir = path.Join(home, ".vscode-server", "extensions")
-	}
+	extensionsDir := path.Join(home, ".vscode-server", "extensions")
+
+	infoLogger.Printf("extensions path: %s", extensionsDir)
 
 	if err := os.MkdirAll(extensionsDir, 0755); err != nil {
 		panic(err)
 	}
-
-	infoLogger.Printf("extensions path: %s", extensionsDir)
 
 	infoLogger.Println("adding extension dir watcher")
 	if err := watcher.Add(extensionsDir); err != nil {
