@@ -1,0 +1,35 @@
+version: '3'
+services:
+  dev:
+    build:
+      context: ../
+      dockerfile: .devcontainer/Dockerfile
+      args:
+        USER_UID: ${USER_UID:-1000}
+        USER_GID: ${USER_GID:-1000}
+    environment:
+      DOCKER_HOST: tcp://localhost:2375
+      PRELOAD_EXTENSIONS: "arrterian.nix-env-selector"
+    volumes:
+      - ..:/workspace:cached
+      - nix:/nix
+    security_opt:
+      - label:disable
+    network_mode: "service:docker"
+
+  docker:
+    image: xtruder/dind-rootless:latest
+    environment:
+      DOCKER_TLS_CERTDIR: ""
+      DOCKER_DRIVER: fuse-overlayfs
+    privileged: true
+    volumes:
+      - ..:/workspace:cached
+      - docker:/home/rootless/.local/share/docker
+    security_opt:
+      - label:disable
+    network_mode: bridge
+
+volumes:
+  nix:
+  docker:

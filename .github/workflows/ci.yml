@@ -21,7 +21,7 @@ jobs:
         name: Prepare
         id: prep
         run: |
-          DOCKER_IMAGE=xtruder/debian-nix-devcontainer
+          DOCKER_IMAGE=xtruder/nix-devcontainer
           VERSION=noop
 
           if [ "${{ github.event_name }}" = "schedule" ]; then
@@ -39,10 +39,6 @@ jobs:
 
           TAGS="${DOCKER_IMAGE}:${VERSION}"
 
-          if [[ $VERSION == "latest" ]]; then
-            FLAKE_TAGS="${DOCKER_IMAGE}:flakes"
-          fi
-
           if [[ $VERSION =~ ^v[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}$ ]]; then
             MINOR=${VERSION%.*}
             MAJOR=${MINOR%.*}
@@ -52,7 +48,6 @@ jobs:
 
           echo ::set-output name=version::${VERSION}
           echo ::set-output name=tags::${TAGS}
-          echo ::set-output name=flake_tags::${FLAKE_TAGS}
           echo ::set-output name=created::$(date -u +'%Y-%m-%dT%H:%M:%SZ')
       -
         name: Set up QEMU
@@ -71,31 +66,10 @@ jobs:
         name: Build and push docker image
         uses: docker/build-push-action@v2
         with:
-          context: "."
-          file: ./Dockerfile
+          context: "./src"
+          file: ./src/Dockerfile
           push: ${{ github.event_name != 'pull_request' }}
           tags: ${{ steps.prep.outputs.tags }}
-          labels: |
-            org.opencontainers.image.title=${{ github.event.repository.name }}
-            org.opencontainers.image.description=${{ github.event.repository.description }}
-            org.opencontainers.image.url=${{ github.event.repository.html_url }}
-            org.opencontainers.image.source=${{ github.event.repository.clone_url }}
-            org.opencontainers.image.version=${{ steps.prep.outputs.version }}
-            org.opencontainers.image.created=${{ steps.prep.outputs.created }}
-            org.opencontainers.image.revision=${{ github.sha }}
-            org.opencontainers.image.licenses=${{ github.event.repository.license.spdx_id }}
-
-      -
-        name: Build and push docker image with flakes support
-        uses: docker/build-push-action@v2
-        with:
-          context: "."
-          file: ./Dockerfile
-          push: ${{ github.event_name != 'pull_request' }}
-          tags: ${{ steps.prep.outputs.flake_tags }}
-          build-args: |
-            NIX_INSTALL_SCRIPT=https://github.com/numtide/nix-unstable-installer/releases/download/nix-2.4pre20210823_af94b54/install
-            EXTRA_NIX_CONFIG=experimental-features = nix-command flakes
           labels: |
             org.opencontainers.image.title=${{ github.event.repository.name }}
             org.opencontainers.image.description=${{ github.event.repository.description }}

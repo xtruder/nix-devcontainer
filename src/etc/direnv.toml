@@ -1,0 +1,13 @@
+# direnv global config
+
+[global]
+
+# increase warn timeout to 30 minutes, as it can take
+# long time to load all nix dependencies
+warn_timeout = "30m"
+
+bash_path = "/bin/bash"
+
+# whitelist all paths, since we are running in container
+[whitelist]
+prefix = [ "/" ]

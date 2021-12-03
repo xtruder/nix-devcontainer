@@ -1,26 +1,14 @@
-examples = simple-project simple-project-with-niv simple-project-with-flakes workspace-docker-compose-with-flakes
-
-.PHONY: cookiecutter
-cookiecutter: clean $(examples)
-
-clean:
-	-rm -r examples/*
-
-$(examples):
-	cookiecutter --no-input --config-file .cookiecutter/$@.yaml -f -o examples template
-	cd examples/$@; if [ -f flake.nix ]; then nix flake update; fi
-
 .PHONY: build
 build:
-	docker build -t xtruder/debian-nix-devcontainer:latest .
-
-.PHONY: build-flakes
-build-flakes:
-	docker build \
-		--build-arg NIX_INSTALL_SCRIPT=https://github.com/numtide/nix-flakes-installer/releases/download/nix-3.0pre20200820_4d77513/install \
-		--build-arg EXTRA_NIX_CONFIG="experimental-features = nix-command flakes" \
-		-t xtruder/debian-nix-devcontainer:flakes .
+	docker build -t xtruder/nix-devcontainer:latest -f src/Dockerfile src
 
 .PHONY: test
-test:
-	docker build --build-arg USER_UID= --build-arg USER_GID= -f test.Dockerfile .
+test: build
+	docker build -t nix-devcontainer-test \
+		--build-arg USERNAME=user \
+		--build-arg USER_UID=1001 \
+		--build-arg USER_GID=1001 \
+		test -f test/Dockerfile
+
+	docker run -ti -e PRELOAD_EXTENSIONS="test" nix-devcontainer-test \
+		bash -ic '$${PROMPT_COMMAND}; . /workspace/test.sh; pkill -TERM ext-preloader'

@@ -1,18 +1,28 @@
 {
-    description = "debian-nix-devcontainer";
+  description = "dnix-devcontainer";
 
-    inputs = {
-      nixpkgs.url = "github:nixos/nixpkgs/nixos-20.09";
-    };
+  inputs = {
+    nixpkgs.url = "github:nixos/nixpkgs/nixos-21.05";
+  };
 
-    outputs = { self, nixpkgs }: let
+  outputs = { self, nixpkgs  }:
+    let
       system = "x86_64-linux";
       pkgs = nixpkgs.legacyPackages.${system};
-    in {
+    in
+    {
       devShell.${system} = pkgs.mkShell {
-        buildInputs = with pkgs; [
-          docker
-          cookiecutter
+        nativeBuildInputs = with pkgs; [
+          # needed by nix
+          nixpkgs-fmt
+          rnix-lsp
+
+          # for building docker images
+          docker-client
+          gnumake
+
+          # go dev
+          go
         ];
       };
     };

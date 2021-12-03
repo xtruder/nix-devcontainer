@@ -1,48 +1,20 @@
 // For format details, see https://aka.ms/vscode-remote/devcontainer.json or the definition README at
 // https://github.com/microsoft/vscode-dev-containers/tree/master/containers/docker-existing-dockerfile
 {
-  "name": "debian-nix-devcontainer",
-  "dockerFile": "Dockerfile",
-  "build": {
-    "args": {
-      "USER_UID": "${localEnv:USER_UID}",
-      "USER_GID": "${localEnv:USER_GID}"
-    }
-  },
-  "mounts": [
-    "source=debian-nix-devcontainer_devcontainer_nix,target=/nix,type=volume",
-    "source=debian-nix-devcontainer_devcontainer_direnv,target=/home/user/.local/share/direnv/allow,type=volume",
-    "source=/var/run/docker.sock,target=/var/run/docker.sock,type=bind"
-  ],
-  "runArgs": [
-    "--security-opt", "label=disable"
-  ],
-  "containerEnv": {
-    "PATH": "/home/user/.nix-profile/bin:/home/user/.local/bin:/usr/local/bin:/usr/bin:/bin",
-    "PROJECT_DIR": "/workspaces/debian-nix-devcontainer"
-  },
+  "name": "nix-devcontainer",
+  "dockerComposeFile": "docker-compose.yml",
+  "service": "dev",
+  "workspaceFolder": "/workspace",
   
-  // Set *default* container specific settings.json values on container create.
-  "settings": { 
-    "terminal.integrated.shell.linux": "/bin/bash",
-    "terminal.integrated.shellArgs.linux": ["-l"]
-  },
+  "updateRemoteUserUID": false,
 
-  "userEnvProbe": "loginInteractiveShell",
+  "onCreateCommand": "nix-shell --command 'echo done building nix dev environment'",
 
-  // Add the IDs of extensions you want installed when the container is created.
   "extensions": [
-    "bbenoist.nix",
-    "ms-azuretools.vscode-docker"
-  ],
-
-  // Use 'forwardPorts' to make a list of ports inside the container available locally.
-  "forwardPorts": [],
-
-  // Use 'postCreateCommand' to run commands after the container is created.
-  // "postCreateCommand": "go version",
-
-  // Uncomment to connect as a non-root user. See https://aka.ms/vscode-remote/containers/non-root.
-  "remoteUser": "user",
-  "updateRemoteUserUID": false
+    "arrterian.nix-env-selector",
+    "jnoortheen.nix-ide",
+    "fsevenm.run-it-on",
+    "ms-azuretools.vscode-docker",
+    "yzhang.markdown-all-in-one"
+  ]
 }
