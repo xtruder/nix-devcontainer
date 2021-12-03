@@ -14,7 +14,7 @@ term_handler() {
 
 trap 'kill ${!}; term_handler' SIGTERM SIGINT
 
-if [ ! -z "${PRELOAD_EXTENSIONS}" ]; then
+if [ "${CODESPACES}" != "true" ] && [ ! -z "${PRELOAD_EXTENSIONS}" ]; then
     ext-preloader -ext "${PRELOAD_EXTENSIONS}" &
     pid="$!"
 fi
