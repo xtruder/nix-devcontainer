@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"flag"
 	"fmt"
+	"io"
 	"io/ioutil"
 	"log"
 	"os"
@@ -69,9 +70,12 @@ func main() {
 
 	flag.Parse()
 
-	debugLogger = log.New(os.Stdout, "DEBUG: ", log.Ldate|log.Ltime|log.Lshortfile)
-	infoLogger = log.New(os.Stdout, "INFO: ", log.Ldate|log.Ltime|log.Lshortfile)
-	errorLogger = log.New(os.Stderr, "ERROR: ", log.Ldate|log.Ltime|log.Lshortfile)
+	logFile, _ := os.OpenFile("/tmp/ext-preloader.log", os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0664)
+	logWriter := io.MultiWriter(os.Stdout, logFile)
+
+	debugLogger = log.New(logWriter, "DEBUG: ", log.Ldate|log.Ltime|log.Lshortfile)
+	infoLogger = log.New(logWriter, "INFO: ", log.Ldate|log.Ltime|log.Lshortfile)
+	errorLogger = log.New(logWriter, "ERROR: ", log.Ldate|log.Ltime|log.Lshortfile)
 
 	if !verbose {
 		debugLogger.SetOutput(ioutil.Discard)
