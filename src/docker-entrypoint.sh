@@ -1,26 +1,13 @@
 #!/bin/bash
 
-pid=0
-
-# SIGTERM-handler
-term_handler() {
-  if [ $pid -ne 0 ]; then
-    kill -SIGTERM "$pid"
-    wait "$pid"
-  fi
-
-  exit
-}
-
-trap 'kill ${!}; term_handler' SIGTERM SIGINT
-
-if [ "${CODESPACES}" != "true" ] && [ ! -z "${PRELOAD_EXTENSIONS}" ]; then
-    ext-preloader -ext "${PRELOAD_EXTENSIONS}" &
-    pid="$!"
+if [ ! -z "${PRELOAD_EXTENSIONS}" ]; then
+  ext-preloader &
 fi
 
-"$@"
-
-if [ $pid -ne 0 ]; then
-  wait "$pid"
+if [ $# -eq 0 ]; then
+  while :; do sleep 2073600; done
+else
+  "$@" &
 fi
+
+wait -n
