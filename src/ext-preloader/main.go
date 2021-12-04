@@ -25,13 +25,12 @@ func contains(s []interface{}, e string) bool {
 	return false
 }
 
-func pathExists(path string) (bool) {
-    _, err := os.Stat(path)
+func envOrDefault(envName string, defaultVal string) string {
+	if val := os.Getenv(envName); val != "" {
+		return val
+	}
 
-    if err == nil { return true }
-    if os.IsNotExist(err) { return false }
-
-	panic(err)
+	return defaultVal
 }
 
 var (
@@ -39,16 +38,34 @@ var (
 	infoLogger  *log.Logger
 	errorLogger *log.Logger
 
-	verboseFlag           bool
-	preloadExtensionsFlag string
+	verbose           bool
+	preloadExtensionsStr string
+	extensionsPath string
 )
 
 func main() {
 	sigs := make(chan os.Signal)
 	signal.Notify(sigs, syscall.SIGINT, syscall.SIGTERM)
 
-	flag.BoolVar(&verboseFlag, "verbose", false, "Enable verbose logging")
-	flag.StringVar(&preloadExtensionsFlag, "ext", "", "Comma separated extensions to preload")
+	home, err := os.UserHomeDir()
+	if err != nil {
+		panic(err)
+	}
+
+	vscodeDir := path.Join(home, ".vscode-server")
+	if (os.Getenv("CODESPACES") == "true") {
+		vscodeDir = path.Join(home, ".vscode-remote")
+	}
+
+	defaultExtensionsPath:= envOrDefault("VSCODE_EXTENSIONS_PATH", path.Join(vscodeDir, "extensions"))
+	defaultPreloadExtensions := envOrDefault("PRELOAD_EXTENSIONS", "")
+
+	flag.BoolVar(&verbose, "verbose", false,
+		"Enable verbose logging")
+	flag.StringVar(&extensionsPath, "path", defaultExtensionsPath,
+		"VSCode extensions path")
+	flag.StringVar(&preloadExtensionsStr, "ext", defaultPreloadExtensions,
+		"Comma separated list of extensions to preload")
 
 	flag.Parse()
 
@@ -56,49 +73,36 @@ func main() {
 	infoLogger = log.New(os.Stdout, "INFO: ", log.Ldate|log.Ltime|log.Lshortfile)
 	errorLogger = log.New(os.Stderr, "ERROR: ", log.Ldate|log.Ltime|log.Lshortfile)
 
-	if !verboseFlag {
+	if !verbose {
 		debugLogger.SetOutput(ioutil.Discard)
 	}
 
-	if preloadExtensionsFlag == "" {
+	if preloadExtensionsStr == "" {
 		errorLogger.Fatalln("missing preload extensions")
 	}
 
-	preloadExtensions := strings.Split(preloadExtensionsFlag, ",")
+	preloadExtensions := strings.Split(preloadExtensionsStr, ",")
 
 	infoLogger.Printf("starting extension preloader, extensions to preload: %s", preloadExtensions)
 
-	home, err := os.UserHomeDir()
-	if err != nil {
+	// make sure extensions path exists
+	if err := os.MkdirAll(extensionsPath, 0755); err != nil {
 		panic(err)
 	}
 
 	watcher, _ := fsnotify.NewWatcher()
 	defer watcher.Close()
 
-	var extensionsDir string
-	if pathExists(path.Join(home, ".vscode-server")) {
-		extensionsDir = path.Join(home, ".vscode-server", "extensions")
-	} else if pathExists(path.Join(home, ".vscode-remote")) {
-		extensionsDir = path.Join(home, ".vscode-remote", "extensions")
-	} else {
-		extensionsDir = path.Join(home, ".vscode-server", "extensions")
-	}
-
-	if err := os.MkdirAll(extensionsDir, 0755); err != nil {
-		panic(err)
-	}
-
-	infoLogger.Printf("extensions path: %s", extensionsDir)
+	infoLogger.Printf("extensions path: %s", extensionsPath)
 
 	infoLogger.Println("adding extension dir watcher")
-	if err := watcher.Add(extensionsDir); err != nil {
+	if err := watcher.Add(extensionsPath); err != nil {
 		panic(err)
 	}
 
 	done := make(chan bool)
 	go func() {
-		files, err := ioutil.ReadDir(extensionsDir)
+		files, err := ioutil.ReadDir(extensionsPath)
 		if err != nil {
 			errorLogger.Fatalf("error listing extensions: %v", err)
 		}
@@ -108,7 +112,7 @@ func main() {
 				continue
 			}
 
-			extPath := path.Join(extensionsDir, f.Name())
+			extPath := path.Join(extensionsPath, f.Name())
 			pkgJSONPath := path.Join(extPath, "package.json")
 
 			if fixed, extName, err := modifyPackageJSON(pkgJSONPath, preloadExtensions); err != nil {
@@ -130,7 +134,7 @@ func main() {
 			case event := <-watcher.Events:
 				debugLogger.Printf("EVENT! %#v\n", event)
 
-				if event.Op == fsnotify.Create && filepath.Dir(event.Name) == extensionsDir {
+				if event.Op == fsnotify.Create && filepath.Dir(event.Name) == extensionsPath {
 					debugLogger.Printf("adding watcher for extension path: %s", event.Name)
 
 					if err := watcher.Add(event.Name); err != nil {
@@ -143,7 +147,7 @@ func main() {
 				if event.Op == fsnotify.Create || event.Op == fsnotify.Write {
 					filePath := event.Name
 
-					pkgJSONPath := path.Join(extensionsDir, filepath.Base(filepath.Dir(filePath)), "package.json")
+					pkgJSONPath := path.Join(extensionsPath, filepath.Base(filepath.Dir(filePath)), "package.json")
 
 					if filePath == pkgJSONPath {
 						debugLogger.Printf("modifing package.json: %s", pkgJSONPath)
