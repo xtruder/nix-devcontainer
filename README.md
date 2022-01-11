@@ -15,8 +15,8 @@
 | *Works in Codespaces*       | Yes                                                                           |
 | *Container host OS support* | Linux, macOS, Windows                                                         |
 | *Languages, platforms*      | All languages that nix supports                                               |
-| *Base image*                | [xtruder/nix-devcontainer](https://hub.docker.com/r/xtruder/nix-devcontainer) |
-| *Image tags*                | latest                                                                        |
+| *Image*                     | ghcr.io/xtruder/nix-devcontainer:v1                                           |
+| *Image tags*                | v1,latest,edge                                                                |
 
 ## Description
 
@@ -166,7 +166,7 @@ Example `.devcontainer/devcontainer.json`:
 Example `.devcontainer/Dockerfile`:
 
 ```dockerfile
-FROM xtruder/nix-devcontainer
+FROM ghcr.io/xtruder/nix-devcontainer:v1
 ```
 
 **Dockerfile is needed for build triggers to run.** Build triggers will change
@@ -332,7 +332,7 @@ This will make sure your dev container and service containers are running in sam
 Caching nix store is as simple as adding named docker volume on `/nix`.
 
 ```dockerfile
-FROM xtruder/nix-devcontainer
+FROM ghcr.io/xtruder/nix-devcontainer:v1
 VOLUME /nix
 ```
 
