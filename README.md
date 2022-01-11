@@ -9,14 +9,14 @@
 
 | Metadata                    | Value                                                                         |
 | --------------------------- | ----------------------------------------------------------------------------- |
-| *Maintainer*                | Jaka Hudoklin <jaka@x-truder.net> [@offlinehacker](github.com/offlinehacker)  |
-| *Contributors*              | [@offlinehacker](github.com/offlinehacker), [@Rizary](github.com/rizary)      |
+| *Image*                     | [ghcr.io/xtruder/nix-devcontainer](https://github.com/xtruder/nix-devcontainer/pkgs/container/nix-devcontainer) |
+| *Image tags*                | v1,latest,edge                                                                |
 | *Definition type*           | standalone or Docker Compose                                                  |
 | *Works in Codespaces*       | Yes                                                                           |
 | *Container host OS support* | Linux, macOS, Windows                                                         |
 | *Languages, platforms*      | All languages that nix supports                                               |
-| *Image*                     | [ghcr.io/xtruder/nix-devcontainer](https://github.com/xtruder/nix-devcontainer/pkgs/container/nix-devcontainer) |
-| *Image tags*                | v1,latest,edge                                                                |
+| *Contributors*              | [@offlinehacker](github.com/offlinehacker), [@Rizary](github.com/rizary)      |
+| *Maintainer*                | Jaka Hudoklin <jaka@x-truder.net> [@offlinehacker](github.com/offlinehacker)  |
 
 ## Description
 
