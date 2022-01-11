@@ -20,6 +20,7 @@
           # for building docker images
           docker-client
           gnumake
+          git
 
           # go dev
           go
