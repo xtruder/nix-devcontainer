@@ -24,8 +24,8 @@ Nix devcontainer is an opinionated [vscode devcontainer](https://code.visualstud
 that uses debian image for a base system and [nix package manager](https://nixos.org/)
 for management of your development environments. Combination
 of a good base image and a best in class package manager, gives
-you versatile, reproduible and deterministic development container
-that you can use for everywhere.
+you versatile, reproduible and deterministic development environment
+that you can use everywhere.
 
 ### Components
 
