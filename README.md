@@ -15,7 +15,7 @@
 | *Works in Codespaces*       | Yes                                                                           |
 | *Container host OS support* | Linux, macOS, Windows                                                         |
 | *Languages, platforms*      | All languages that nix supports                                               |
-| *Image*                     | ghcr.io/xtruder/nix-devcontainer:v1                                           |
+| *Image*                     | [ghcr.io/xtruder/nix-devcontainer](https://github.com/xtruder/nix-devcontainer/pkgs/container/nix-devcontainer) |
 | *Image tags*                | v1,latest,edge                                                                |
 
 ## Description
