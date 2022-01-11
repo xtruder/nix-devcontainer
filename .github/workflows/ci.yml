@@ -44,8 +44,8 @@ jobs:
             xtruder/nix-devcontainer
             ghcr.io/${{ github.repository }} 
           tags: |
-            type=semver,pattern={{version}}
-            type=semver,pattern={{major}}
+            type=semver,pattern=v{{version}}
+            type=semver,pattern=v{{major}}
             type=edge,branch=main
 
       - name: Build and push docker image to dockerhub
