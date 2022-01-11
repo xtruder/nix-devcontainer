@@ -1,5 +1,8 @@
 # nix-devcontainer
 
+![workflow status](https://github.com/xtruder/nix-devcontainer/actions//workflows/ci.yml/badge.svg)
+
+
 ## Summary
 
 **Swiss army knife container for vscode development environments**
