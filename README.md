@@ -55,13 +55,7 @@ that you can use everywhere.
    (defined by `shell.nix` file) into your shell and reloads it automatically when it changes,
    keeping your environment fresh.
 
-## Adding devcontainer definition into your project
-
-If this is your first time using a development container, please follow the
-[getting started steps](https://aka.ms/vscode-remote/containers/getting-started)
-to set up your machine, install docker and vscode remote extensions.
-
-### Example templates
+## Example templates
 
 There are sevaral example templates you can use to quickly bootstrap your project:
 
@@ -74,6 +68,12 @@ There are sevaral example templates you can use to quickly bootstrap your projec
   
   Example project using `nix-devcontainer` for python and jupyter notebooks,
   with python packages managed by nix.
+
+## Adding devcontainer definition into your project
+
+If this is your first time using a development container, please follow the
+[getting started steps](https://aka.ms/vscode-remote/containers/getting-started)
+to set up your machine, install docker and vscode remote extensions.
 
 ### Project setup
 
