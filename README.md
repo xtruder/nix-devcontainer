@@ -387,12 +387,12 @@ to mount `docker.sock` in devcontainer:
    ```yaml
    version: '3'
    services:
-      dev:
-         ...
-         volumes:
-            - type: bind
-            source: /var/run/docker.sock
-            target: /var/run/docker.sock
+     dev:
+       ...
+       volumes:
+         - type: bind
+           source: /var/run/docker.sock
+           target: /var/run/docker.sock
    ```
 
    ```jsonc
@@ -411,15 +411,42 @@ to mount `docker.sock` in devcontainer:
    RUN groupadd -g ${DOCKER_GID} docker && usermod -a -G docker ${USERNAME} 
    ```
 
-**Exposing docker socket to your development environment is a security risk, as it
-exposes your system to potentially malicious development environment. Make sure
-you never run untrusted code in such environment.**
+**Be aware that exposing docker socket to your development environment is a security risk, as it
+exposes your system to potentially malicious development environment. Make sure you never run untrusted code in such environment.**
 
-Better alternative is to run rootless docker in docker as separate privileged service
-via `docker-compose`. That should mitigate most security risks, but
-because it uses `fuser-overlays` it is slower. An example of such rootless docker
-image and README how to integrate in `docker-compose` is avalible here:
-https://hub.docker.com/r/xtruder/dind-rootless
+Better alternative is to run rootless docker in docker as separate privileged service via `docker-compose`. While this service runs
+in privileged container, it mittigates the risk by running docker
+without root.
+
+```yaml
+version: '3'
+services:
+  # your development container
+  dev:
+    ...
+
+    # it's advised to use shared network namespace, as it simplifies
+    # development and can allow connections to docker via localhost
+    network_mode: "service:docker"
+
+  docker:
+    image: docker:dind-rootless
+    environment:
+      DOCKER_TLS_CERTDIR: ""
+      DOCKER_DRIVER: overlay2
+    privileged: true
+    volumes:
+      - ..:/workspace:cached
+      - docker:/var/lib/docker
+    security_opt:
+      - label:disable
+    network_mode: bridge
+
+volumes:
+  docker:
+```
+
+**Only linux kernels of version 5.11+ support overlay2 storage driver in rootless containers. You can use default vfs or fuse-overlayfs drivers, but both are a bit slow, so they are not recommended**
 
 ### Preload vscode extensions (run nix env selector before other extensions)
 
