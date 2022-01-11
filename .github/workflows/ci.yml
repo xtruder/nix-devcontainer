@@ -19,11 +19,10 @@ jobs:
       packages: write
       contents: read
     steps:
-      -
-        name: Checkout
+      - name: Checkout
         uses: actions/checkout@v2
-      -
-        name: Login to DockerHub
+
+      - name: Login to DockerHub
         if: github.event_name != 'pull_request'
         uses: docker/login-action@v1 
         with:
@@ -44,9 +43,12 @@ jobs:
           images: |
             xtruder/nix-devcontainer
             ghcr.io/${{ github.repository }} 
+          tags: |
+            type=semver,pattern={{version}}
+            type=semver,pattern={{major}}
+            type=edge,branch=main
 
-      -
-        name: Build and push docker image to dockerhub
+      - name: Build and push docker image to dockerhub
         uses: docker/build-push-action@v2
         with:
           context: "./src"
