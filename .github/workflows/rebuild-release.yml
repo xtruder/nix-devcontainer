@@ -38,6 +38,7 @@ jobs:
             ghcr.io/${{ github.repository }} 
           tags: |
             type=raw,value=v1
+            type=raw,value=latest
 
       - name: Build and push docker image to dockerhub
         uses: docker/build-push-action@v2
