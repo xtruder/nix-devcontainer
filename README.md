@@ -139,10 +139,11 @@ Example `.devcontainer/devcontainer.json`:
 
    // disable command overriding and updating remote user ID
   "overrideCommand": false,
+  "userEnvProbe": "loginShell",
   "updateRemoteUserUID": false,
 
   // build development environment on creation, make sure you already have shell.nix
-  //"onCreateCommand": "nix-shell --command 'echo done building nix dev environment'",
+  "onCreateCommand": "nix-shell --command 'echo done building nix dev environment'",
 
   // Add the IDs of extensions you want installed when the container is created.
   "extensions": [
