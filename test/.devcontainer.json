@@ -1,0 +1,34 @@
+// For format details, see https://aka.ms/vscode-remote/devcontainer.json or the definition README at
+// https://github.com/microsoft/vscode-dev-containers/tree/master/containers/docker-existing-dockerfile
+{
+  "name": "devcontainer-test-project",
+  "dockerFile": "./../src/Dockerfile",
+  "context": "./../src",
+
+  // run arguments passed to docker
+  "runArgs": [
+    "--security-opt", "label=disable"
+  ],
+
+  "containerEnv": {
+     // extensions to preload before other extensions
+    "PRELOAD_EXTENSIONS": "arrterian.nix-env-selector"
+  },
+
+   // disable command overriding and updating remote user ID
+  "overrideCommand": false,
+  "userEnvProbe": "loginShell",
+  "updateRemoteUserUID": false,
+
+  // build development environment on creation, make sure you already have shell.nix
+  "onCreateCommand": "nix-shell --command 'echo done building nix dev environment'",
+
+  // Add the IDs of extensions you want installed when the container is created.
+  "extensions": [
+    // select nix environment
+    "arrterian.nix-env-selector"
+  ],
+
+  // Use 'forwardPorts' to make a list of ports inside the container available locally.
+  "forwardPorts": []
+}
