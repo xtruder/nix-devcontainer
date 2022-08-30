@@ -3,7 +3,7 @@
 {
   "name": "devcontainer-codespaces",
   "dockerFile": "${localWorkspaceFolder}/src/Dockerfile",
-  "context": "${localWorkspaceFolder}",
+  "context": "${localWorkspaceFolder}/src",
   "workspaceFolder": "/workspace",
 
   // run arguments passed to docker
