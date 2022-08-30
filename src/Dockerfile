@@ -38,7 +38,8 @@ RUN apt -y install --no-install-recommends \
     dialog \
     locales \
     man-db \
-    bash-completion
+    bash-completion \
+    acl
 
 # create at least locae for en_US.UTF-8
 RUN echo "en_US.UTF-8 UTF-8" >> /etc/locale.gen && locale-gen
