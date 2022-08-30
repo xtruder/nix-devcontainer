@@ -10,6 +10,7 @@
   "updateRemoteUserUID": false,
 
   "onCreateCommand": "nix-shell --command 'echo done building nix dev environment'",
+  "postCreateCommand": "sudo setfacl -k /tmp",
 
   "extensions": [
     "arrterian.nix-env-selector",
