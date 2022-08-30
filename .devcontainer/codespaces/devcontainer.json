@@ -4,7 +4,6 @@
   "name": "devcontainer-codespaces",
   "dockerFile": "${localWorkspaceFolder}/src/Dockerfile",
   "context": "${localWorkspaceFolder}/src",
-  "workspaceFolder": "/workspace",
 
   // run arguments passed to docker
   "runArgs": [
