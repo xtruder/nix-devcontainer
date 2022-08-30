@@ -1,9 +1,10 @@
 // For format details, see https://aka.ms/vscode-remote/devcontainer.json or the definition README at
 // https://github.com/microsoft/vscode-dev-containers/tree/master/containers/docker-existing-dockerfile
 {
-  "name": "devcontainer-test-project",
-  "dockerFile": "./../src/Dockerfile",
-  "context": "./../src",
+  "name": "devcontainer-codespaces",
+  "dockerFile": "${localWorkspaceFolder}/src/Dockerfile",
+  "context": "${localWorkspaceFolder}",
+  "workspaceFolder": "/workspace",
 
   // run arguments passed to docker
   "runArgs": [
