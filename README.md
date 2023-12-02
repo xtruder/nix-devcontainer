@@ -146,15 +146,19 @@ Example `.devcontainer/devcontainer.json`:
   "onCreateCommand": "nix-shell --command 'echo done building nix dev environment'",
 
   // Add the IDs of extensions you want installed when the container is created.
-  "extensions": [
-    // select nix environment
-    "arrterian.nix-env-selector",
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        // select nix environment
+        "arrterian.nix-env-selector",
 
-    // extra extensions
-    //"fsevenm.run-it-on",
-    //"jnoortheen.nix-ide",
-    //"ms-python.python"
-  ],
+        // extra extensions
+        //"fsevenm.run-it-on",
+        //"jnoortheen.nix-ide",
+        //"ms-python.python"
+      ]
+    }
+  },
 
   // Use 'forwardPorts' to make a list of ports inside the container available locally.
   "forwardPorts": [],
@@ -168,6 +172,9 @@ Example `.devcontainer/Dockerfile`:
 
 ```dockerfile
 FROM ghcr.io/xtruder/nix-devcontainer:v1
+
+# cache /nix
+VOLUME /nix
 ```
 
 **Dockerfile is needed for build triggers to run.** Build triggers will change
@@ -212,15 +219,19 @@ Example `.devcontainer/devcontainer.json`:
   "onCreateCommand": "nix-shell --command 'echo done building nix dev environment'",
 
   // Add the IDs of extensions you want installed when the container is created.
-  "extensions": [
-    // select nix environment
-    "arrterian.nix-env-selector",
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        // select nix environment
+        "arrterian.nix-env-selector",
 
-    // extra extensions
-    //"fsevenm.run-it-on",
-    //"jnoortheen.nix-ide",
-    //"ms-python.python"
-  ],
+        // extra extensions
+        //"fsevenm.run-it-on",
+        //"jnoortheen.nix-ide",
+        //"ms-python.python"
+      ]
+    }
+  },
 }
 ```
 
