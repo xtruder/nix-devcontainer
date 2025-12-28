@@ -145,7 +145,7 @@ Example `.devcontainer/devcontainer.json`:
   // build development environment on creation, make sure you already have shell.nix
   "onCreateCommand": "nix-shell --command 'echo done building nix dev environment'",
   // OR, if you are using a flake.nix instead of a shell.nix, then use this instead:
-  // "onCreateCommand": "nix develop --command bash -c 'echo done building nix dev environment'"
+  // "onCreateCommand": "nix develop --command 'echo done building nix dev environment'"
 
   // Add the IDs of extensions you want installed when the container is created.
   "customizations": {
